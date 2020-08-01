@@ -1,37 +1,99 @@
-## Welcome to GitHub Pages
+## How to write auto startup script for the servers
 
-You can use the [editor on GitHub](https://github.com/BhargavVaghasiya-RV/bhargav.github.com/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+In this tutorial we will show you the script for the liferay server.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+To write this script performs the following steps
 
-### Markdown
-
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
+### Open the following location
 ```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+/etc/init.d
 ```
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+### Create on file with the name Liferay
+```markdown
+touch liferay
+```
 
-### Jekyll Themes
+### Open this file
+```markdown
+nano liferay
+```
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/BhargavVaghasiya-RV/bhargav.github.com/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+### Write following code in this file
+```markdown
+#!/bin/bash 
+TOMCAT_HOME=${liferay_home_path}/tomcat-7.0.62/bin 
+START_TOMCAT=${liferay_home_path}/tomcat-7.0.62/bin/startup.sh 
+STOP_TOMCAT=${liferay_home_path}/tomcat-7.0.62/bin/shutdown.sh 
+ 
+start() { 
+ echo -n "Starting tomcat: " 
+ cd $TOMCAT_HOME 
+ ${START_TOMCAT} 
+ echo "done." 
+} 
+ 
+stop() { 
+ echo -n "Shutting down tomcat: " 
+ cd $TOMCAT_HOME 
+ ${STOP_TOMCAT} 
+ echo "done." 
+} 
+ 
+case "$1" in 
+start) 
+ sleep 10 
+ start 
+ ;;  
+ 
+stop) 
+ stop 
+ ;;  
+ 
+restart) 
+ stop 
+ sleep 10 
+ start 
+ ;; 
+ *) 
+ 
+echo "Usage: $0 {start|stop|restart}" 
+esac 
+exit 0 
+```
 
-### Support or Contact
+### Give 755/775 permission to execute
+```markdown
+chmod 755 liferay
+```
 
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+### Add liferay in chkconfig
+```markdown
+chkconfig --add liferay
+```
+
+### Check the list of literary
+```markdown
+chkconfig --list liferay
+```
+
+### It will give following output
+```markdown
+liferay        0:off   1:off   2:on    3:on    4:on    5:on    6:off 
+```
+
+### Now you can use the following commands to start/stop/restart the Liferay server.
+### To start the Liferay server
+### 
+```markdown
+service liferay start
+```
+
+### To stop the Liferay server
+```markdown
+service liferay stop
+```
+### To restart the Liferay server
+```markdown
+service liferay restart
+```
